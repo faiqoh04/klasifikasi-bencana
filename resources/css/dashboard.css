@@ -1,0 +1,24 @@
+body{
+    background:#f4f6f9;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.sidebar{
+    background:#061b38;
+}
+
+.card{
+    border:none;
+    border-radius:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.08);
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    transition:.3s;
+}
+
+.kpi-number{
+    font-size:32px;
+    font-weight:bold;
+}
