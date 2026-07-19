@@ -15,18 +15,14 @@ class ClassificationController extends Controller
 {
     public function index()
     {
-        // Daftar kabupaten/kota dengan koordinat rata-rata (centroid)
+        // Daftar kabupaten/kota untuk dropdown
         $regenciesList = DB::table('historical_disasters')
-            ->select('regency', DB::raw('ROUND(AVG(latitude), 5) as lat'), DB::raw('ROUND(AVG(longitude), 5) as lng'))
+            ->select('regency')
+            ->distinct()
             ->whereNotNull('regency')
             ->where('regency', '!=', '')
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->where('latitude', '!=', 0)
-            ->where('longitude', '!=', 0)
-            ->groupBy('regency')
             ->orderBy('regency')
-            ->get();
+            ->pluck('regency');
 
         // Normalisasi & filter jenis bencana sesuai Juklak BNPB
         $rawTypes = DB::table('historical_disasters')

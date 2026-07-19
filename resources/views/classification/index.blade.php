@@ -102,9 +102,8 @@
                                 <div class="col-md-6">
                                     <label class="form-label text-slate-600 mb-1" style="font-size: 12px;">Lokasi (Kabupaten/Kota)</label>
                                     <select id="regency_select" class="form-select form-select-sm border">
-                                        <option value="" data-lat="" data-lng="">-- Pilih Kabupaten/Kota --</option>
-                                        @foreach($regenciesList as $r)
-                                            <option value="{{ $r->regency }}" data-lat="{{ $r->lat }}" data-lng="{{ $r->lng }}">{{ $r->regency }}</option>
+                                        @foreach($regenciesList as $regency)
+                                            <option value="{{ $regency }}">{{ $regency }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -702,21 +701,65 @@ updateCondOptions();
 
 // ============================================================
 // AUTO-FILL KOORDINAT BERDASARKAN PILIHAN KABUPATEN/KOTA
+// Sumber: Titik tengah administratif Kabupaten/Kota Jawa Timur
 // ============================================================
+const regencyCoords = {
+    "Bangkalan Kabupaten":    { lat: -7.0289,  lng: 112.7469 },
+    "Banyuwangi Kabupaten":   { lat: -8.2191,  lng: 114.3691 },
+    "Blitar Kabupaten":       { lat: -8.0955,  lng: 112.1609 },
+    "Blitar Kota":            { lat: -8.0983,  lng: 112.1683 },
+    "Bojonegoro Kabupaten":   { lat: -7.1502,  lng: 111.8817 },
+    "Bondowoso Kabupaten":    { lat: -7.9135,  lng: 113.8215 },
+    "Batu Kota":              { lat: -7.8687,  lng: 112.5268 },
+    "Gresik Kabupaten":       { lat: -7.1573,  lng: 112.6558 },
+    "Jember Kabupaten":       { lat: -8.1724,  lng: 113.7029 },
+    "Jombang Kabupaten":      { lat: -7.5458,  lng: 112.2331 },
+    "Kediri Kabupaten":       { lat: -7.8261,  lng: 111.9924 },
+    "Kediri Kota":            { lat: -7.8166,  lng: 112.0114 },
+    "Lamongan Kabupaten":     { lat: -7.1175,  lng: 112.4115 },
+    "Lumajang Kabupaten":     { lat: -8.1302,  lng: 113.2226 },
+    "Madiun Kabupaten":       { lat: -7.6278,  lng: 111.5055 },
+    "Madiun Kota":            { lat: -7.6298,  lng: 111.5228 },
+    "Magetan Kabupaten":      { lat: -7.6534,  lng: 111.3382 },
+    "Malang Kabupaten":       { lat: -8.1574,  lng: 112.6288 },
+    "Malang Kota":            { lat: -7.9797,  lng: 112.6304 },
+    "Mojokerto Kabupaten":    { lat: -7.4700,  lng: 112.4337 },
+    "Mojokerto Kota":         { lat: -7.4715,  lng: 112.4341 },
+    "Nganjuk Kabupaten":      { lat: -7.6041,  lng: 111.8994 },
+    "Ngawi Kabupaten":        { lat: -7.4047,  lng: 111.4467 },
+    "Pacitan Kabupaten":      { lat: -8.1956,  lng: 111.1040 },
+    "Pamekasan Kabupaten":    { lat: -7.1569,  lng: 113.4746 },
+    "Pasuruan Kabupaten":     { lat: -7.6459,  lng: 112.9071 },
+    "Pasuruan Kota":          { lat: -7.6456,  lng: 112.9094 },
+    "Ponorogo Kabupaten":     { lat: -7.8656,  lng: 111.4630 },
+    "Probolinggo Kabupaten":  { lat: -7.7541,  lng: 113.2151 },
+    "Probolinggo Kota":       { lat: -7.7482,  lng: 113.2153 },
+    "Sampang Kabupaten":      { lat: -7.1803,  lng: 113.2468 },
+    "Sidoarjo Kabupaten":     { lat: -7.4478,  lng: 112.7179 },
+    "Situbondo Kabupaten":    { lat: -7.7044,  lng: 114.0080 },
+    "Sumenep Kabupaten":      { lat: -6.9876,  lng: 113.8717 },
+    "Surabaya Kota":          { lat: -7.2575,  lng: 112.7521 },
+    "Trenggalek Kabupaten":   { lat: -8.0575,  lng: 111.7118 },
+    "Tuban Kabupaten":        { lat: -6.8997,  lng: 111.9001 },
+    "Tulungagung Kabupaten":  { lat: -8.0699,  lng: 111.9012 },
+};
+
 const regencySelect = document.getElementById("regency_select");
 
 function autoFillCoordinates() {
-    const selectedOpt = regencySelect.selectedOptions[0];
-    if (selectedOpt) {
-        const lat = selectedOpt.dataset.lat;
-        const lng = selectedOpt.dataset.lng;
-        document.getElementById("latitude").value  = lat || "";
-        document.getElementById("longitude").value = lng || "";
+    const val    = regencySelect.value;
+    const coords = regencyCoords[val];
+    if (coords) {
+        document.getElementById("latitude").value  = coords.lat;
+        document.getElementById("longitude").value = coords.lng;
+    } else {
+        document.getElementById("latitude").value  = "";
+        document.getElementById("longitude").value = "";
     }
 }
 
 regencySelect.addEventListener("change", autoFillCoordinates);
-// Jalankan langsung saat load halaman (mengisi koordinat default)
+// Jalankan saat load halaman
 autoFillCoordinates();
 
 // File display helper
