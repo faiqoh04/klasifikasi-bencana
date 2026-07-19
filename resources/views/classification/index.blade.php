@@ -102,8 +102,9 @@
                                 <div class="col-md-6">
                                     <label class="form-label text-slate-600 mb-1" style="font-size: 12px;">Lokasi (Kabupaten/Kota)</label>
                                     <select id="regency_select" class="form-select form-select-sm border">
-                                        @foreach($regenciesList as $regency)
-                                            <option value="{{ $regency }}">{{ $regency }}</option>
+                                        <option value="" data-lat="" data-lng="">-- Pilih Kabupaten/Kota --</option>
+                                        @foreach($regenciesList as $r)
+                                            <option value="{{ $r->regency }}" data-lat="{{ $r->lat }}" data-lng="{{ $r->lng }}">{{ $r->regency }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -698,6 +699,25 @@ listContainer.addEventListener("click", function(e) {
 
 // Jalankan load awal option
 updateCondOptions();
+
+// ============================================================
+// AUTO-FILL KOORDINAT BERDASARKAN PILIHAN KABUPATEN/KOTA
+// ============================================================
+const regencySelect = document.getElementById("regency_select");
+
+function autoFillCoordinates() {
+    const selectedOpt = regencySelect.selectedOptions[0];
+    if (selectedOpt) {
+        const lat = selectedOpt.dataset.lat;
+        const lng = selectedOpt.dataset.lng;
+        document.getElementById("latitude").value  = lat || "";
+        document.getElementById("longitude").value = lng || "";
+    }
+}
+
+regencySelect.addEventListener("change", autoFillCoordinates);
+// Jalankan langsung saat load halaman (mengisi koordinat default)
+autoFillCoordinates();
 
 // File display helper
 document.getElementById('file').addEventListener('change', function(e) {
